@@ -96,15 +96,6 @@ class _NFCScreenState extends State<NFCScreen> {
           : NdefRecord.createText(dataText.text.trim());
       NdefMessage message = NdefMessage([ndefRecord]);
 
-      // NdefMessage message = NdefMessage([
-      //   NdefRecord.createText('Hello World!'),
-      //   NdefRecord.createUri(Uri.parse('https://flutter.dev')),
-      //   // NdefRecord.createMime(
-      //   //     'text/plain', Uint8List.fromList('Hello'.codeUnits)),
-      //   // NdefRecord.createExternal(
-      //   //     'com.example', 'mytype', Uint8List.fromList('mydata'.codeUnits)),
-      // ]);
-
       try {
         await ndef.write(message);
         result.value = 'Success to "Ndef Write"';
@@ -118,30 +109,32 @@ class _NFCScreenState extends State<NFCScreen> {
   }
 
   void _ndefWriteLock() {
-    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-      var ndef = Ndef.from(tag);
-      if (ndef == null) {
-        result.value = 'Tag is not ndef';
-        // NfcManager.instance.stopSession(errorMessage: result.value.toString());
-        return;
-      }
-
-      try {
-        await ndef.writeLock();
-        result.value = 'Success to "Ndef Write Lock"';
-        NfcManager.instance.stopSession();
-      } catch (e) {
-        result.value = e;
-        NfcManager.instance.stopSession(errorMessage: result.value.toString());
-        return;
-      }
-    });
+    // NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+    //   var ndef = Ndef.from(tag);
+    //   if (ndef == null) {
+    //     result.value = 'Tag is not ndef';
+    //     // NfcManager.instance.stopSession(errorMessage: result.value.toString());
+    //     return;
+    //   }
+    //
+    //   try {
+    //     await ndef.writeLock();
+    //     result.value = 'Success to "Ndef Write Lock"';
+    //     NfcManager.instance.stopSession();
+    //   } catch (e) {
+    //     result.value = e;
+    //     NfcManager.instance.stopSession(errorMessage: result.value.toString());
+    //     return;
+    //   }
+    // });
   }
 
   void _tagRead() {
-    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-      result.value = tag.data;
-      NfcManager.instance.stopSession();
-    });
+    NfcManager.instance.startSession(
+      onDiscovered: (NfcTag tag) async {
+        result.value = tag.data;
+        NfcManager.instance.stopSession();
+      },
+    );
   }
 }
